@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "giaco-dev-backend"
+version = "0.1.0"
+description = "portofolio web dev of giacomo tolari"
+authors = ["Giacomo Tolari <giacomotolari@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
