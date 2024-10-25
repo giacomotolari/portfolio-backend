@@ -2,6 +2,10 @@ start-docker:
 	  @echo "Starting Docker Compose..."
 	  docker-compose up 
 
+start-docker-dev:
+	  @echo "Starting Docker Compose in development mode..."
+	  docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+	  
 stop-docker:
 	  @echo "Stopping Docker Compose..."
 	  docker-compose -f docker-compose.yml down
