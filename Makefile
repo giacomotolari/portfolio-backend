@@ -5,9 +5,6 @@ docker-prod-start:
 	@docker-compose up 
 
 docker-prod-stop:
-	@docker-compose -f docker-compose.dev.yml down
-
-docker-prod-stop:
 	@echo "Stopping Docker Compose..."
 	@docker-compose -f docker-compose.yml down
 
@@ -49,6 +46,16 @@ django-create-superuser:
 	@echo "Creating Django superuser..."
 	@poetry run python3 django_project/manage.py createsuperuser
 
+django-create-app:
+	@echo "Creating Django app..."
+	@poetry run python3 django_project/manage.py startapp $(app_name)
+
 redis-cli:
 	@echo "Connecting to Redis CLI..."
 	@docker exec -it giaco-dev-backend-redis-1 redis-cli
+
+# General commands
+
+format:
+	@echo "Formatting code..."
+	@black .

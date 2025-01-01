@@ -102,12 +102,10 @@ else:
             "NAME": os.getenv("POSTGRES_DB", "giaco-dev-db-dev"),
             "USER": os.getenv("POSTGRES_USER", "giaco-dev-user-dev"),
             "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-            "HOST": 'localhost',
-            "PORT": '5435',
+            "HOST": "localhost",
+            "PORT": "5435",
         }
     }
-
-print("DATABASES:", DATABASES)
 
 
 # Cache settings with Redis
