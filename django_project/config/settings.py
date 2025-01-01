@@ -29,7 +29,6 @@ else:
     ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -92,7 +91,7 @@ if DJANGO_ENV == "production":
             "NAME": os.getenv("POSTGRES_DB"),
             "USER": os.getenv("POSTGRES_USER"),
             "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-            "HOST": os.getenv("POSTGRES_HOST"),
+            "HOST": os.getenv("POSTGRES_HOST", "db"),
             "PORT": os.getenv("POSTGRES_PORT"),
         }
     }
@@ -100,13 +99,15 @@ else:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
-            "NAME": "giaco-dev-db-dev",
-            "USER": "giaco-dev-user-dev",
-            "PASSWORD": "1234",
-            "HOST": "127.0.0.1",
-            "PORT": "5435",
+            "NAME": os.getenv("POSTGRES_DB", "giaco-dev-db-dev"),
+            "USER": os.getenv("POSTGRES_USER", "giaco-dev-user-dev"),
+            "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+            "HOST": 'localhost',
+            "PORT": '5435',
         }
     }
+
+print("DATABASES:", DATABASES)
 
 
 # Cache settings with Redis
@@ -123,7 +124,9 @@ CACHES = {
 
 # Set cache location based on the environment
 if DJANGO_ENV == "production":
-    CACHES["default"]["LOCATION"] = f"redis://{os.getenv('REDIS_HOST')}:{os.getenv('REDIS_PORT')}/1"
+    CACHES["default"][
+        "LOCATION"
+    ] = f"redis://{os.getenv('REDIS_HOST', 'redis')}:{os.getenv('REDIS_PORT', '6380')}/1"
 else:
     CACHES["default"]["LOCATION"] = "redis://127.0.0.1:6380/1"
 

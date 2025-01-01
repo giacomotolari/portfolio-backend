@@ -1,7 +1,7 @@
 # Dockerfile
-FROM python:3.9-slim
+FROM python:3.10-slim
 
-WORKDIR /app
+WORKDIR /app/
 
 COPY pyproject.toml poetry.lock /app/
 
@@ -10,4 +10,4 @@ RUN poetry config virtualenvs.create false && poetry install --no-dev
 
 COPY . /app
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "django_project/manage.py", "runserver", "0.0.0.0:8000"]
