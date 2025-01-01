@@ -18,6 +18,11 @@ docker-dev-start:
 	@echo "Starting Docker Compose in development mode..."
 	@docker-compose -f docker-compose.dev.yml up
 
+# Use when updating the Dockerfile
+docker-dev-start-build:
+	@echo "Starting Docker Compose in development mode with build..."
+	@docker-compose -f docker-compose.dev.yml up --build
+
 docker-dev-stop:
 	@echo "Stopping Docker Compose in development mode..."
 	@docker-compose -f docker-compose.dev.yml down
