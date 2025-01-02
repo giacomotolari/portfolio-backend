@@ -119,6 +119,20 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-multiselectfield"
+version = "0.1.13"
+description = "Django multiple select field"
+optional = false
+python-versions = "*"
+files = [
+    {file = "django_multiselectfield-0.1.13-py3-none-any.whl", hash = "sha256:f146ef568c823a409f4021b98781666ec2debabfceca9176116d749dc39cb8b3"},
+    {file = "django_multiselectfield-0.1.13.tar.gz", hash = "sha256:437d72632f4c0ca416951917632529c3d1d42b62bb6c3c03e3396fa50265be94"},
+]
+
+[package.dependencies]
+django = ">=1.4"
+
+[[package]]
 name = "django-ninja"
 version = "1.3.0"
 description = "Django Ninja - Fast Django REST framework"
@@ -523,4 +537,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "09c4b8a8ebff57d047291cfa17de0c21f75123a1bea95389c5e20671e8bcf5d9"
+content-hash = "95e902fdc9a417bd89a1343641f4abe837d8371b530d7bdf706fb3918a533893"
