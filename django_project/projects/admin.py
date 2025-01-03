@@ -25,7 +25,16 @@ class ProjectAdmin(admin.ModelAdmin):
         (
             "Project URLs",
             {
-                "fields": ("web_page", "git_hub", "git_lab", "play_store", "app_store", "other"),
+                "fields": (
+                    "web_page",
+                    "git_hub",
+                    "git_lab",
+                    "play_store",
+                    "app_store",
+                    "image",
+                    "video",
+                    "other",
+                ),
             },
         ),
         (
@@ -35,13 +44,23 @@ class ProjectAdmin(admin.ModelAdmin):
             },
         ),
     )
+    list_display = ("name", "start_date", "end_date", "status", "size")
+    list_filter = ("status", "categories", "runs_on", "size")
+    search_fields = ("name", "uuid")
 
 
 @admin.register(AsEmployeeProject)
 class AsEmployeeProjectAdmin(ProjectAdmin):
-    list_display = ("name", "employed_by", "start_date", "end_date", "status")
-    list_filter = ("employed_by", "status", "categories")
-    search_fields = ("name", "employed_by__name")
+    fieldsets = ProjectAdmin.fieldsets + (
+        (
+            "Companies",
+            {
+                "fields": ("employed_by", "customer_companies"),
+            },
+        ),
+    )
+    list_display = ProjectAdmin.list_display + ("employed_by",)
+    search_fields = ProjectAdmin.search_fields + ("employed_by", "customer_companies")
 
 
 admin.site.register(PersonalProject, ProjectAdmin)

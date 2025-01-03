@@ -5,28 +5,6 @@ from multiselectfield import MultiSelectField
 
 # export declare global {
 
-#     interface Assets {
-#       images: Asset;
-#       videos: Asset;
-#       icons: Asset;
-#     }
-
-#     type Asset = {
-#       [key: string]: string;
-#     };
-
-#     interface Urls {
-#       webPage?: string;
-#       gitHub?: string;
-#       download?: {
-#         playStore?: string;
-#         appStore?: string;
-#         desktop?: string;
-#         other?: string;
-#       };
-#       other?: string;
-#     }
-
 #     interface TechnologyStack {
 #       frontend: FrontendStack;
 #       backend: BackendStack;
@@ -97,11 +75,12 @@ from multiselectfield import MultiSelectField
 
 
 class StatusChoices(models.TextChoices):
-    PLANNED = "planned", "Planned"
-    IN_PROGRESS = "in-progress", "In Progress"
-    COMPLETED = "completed", "Completed"
-    ARCHIVED = "archived", "Archived"
-    PAUSED = "paused", "Paused"
+    PLANNED = ("planned",)
+    IN_PROGRESS = "in progress"
+    MAINTAINED = "maintained"
+    COMPLETED = "completed"
+    ARCHIVED = "archived"
+    PAUSED = "paused"
 
 
 class SizeChoices(models.TextChoices):
@@ -126,6 +105,7 @@ class GoalsChoices(models.TextChoices):
 
 class CategoriesChoices(models.TextChoices):
     E_COMMERCE = "e-commerce"
+    LOGISTICS = "logistics"
     COMMUNITY = "community"
     GAME = "game"
     PORTFOLIO = "portfolio"
