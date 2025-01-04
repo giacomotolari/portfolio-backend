@@ -24,6 +24,10 @@ docker-dev-stop:
 	@echo "Stopping Docker Compose in development mode..."
 	@docker-compose -f docker-compose.dev.yml down
 
+docker-dev-delete:
+	@echo "Deleting Docker Compose in development mode..."
+	@docker-compose -f docker-compose.dev.yml down -v
+
 docker-dev-exec-db:
 	@echo "Connecting to Postgres CLI..."
 	@docker exec -it giaco-dev-backend-db-1 psql -U giaco-dev-user-dev -d giaco-dev-db-dev
@@ -53,6 +57,39 @@ django-create-app:
 redis-cli:
 	@echo "Connecting to Redis CLI..."
 	@docker exec -it giaco-dev-backend-redis-1 redis-cli
+
+# Postgres commands
+
+tables = auth_group auth_group_permissions auth_permission auth_user auth_user_groups \
+         auth_user_user_permissions companies_customercompany companies_employercompany \
+         django_admin_log django_content_type django_migrations django_session \
+         projects_asemployeeproject projects_asemployeeproject_customer_companies \
+         projects_personalproject projects_teamopensourceproject projects_teamprivateproject 
+
+
+pg-backup-table:
+	@echo "Backing up Postgres table..."
+	@docker exec -it giaco-dev-backend-db-1 pg_dump -U giaco-dev-user-dev -d giaco-dev-db-dev -t $(table_name) > db/$(table_name).sql
+
+pg-restore-table:
+	@echo "Restoring Postgres table..."
+	@docker exec -i giaco-dev-backend-db-1 psql -U giaco-dev-user-dev -d giaco-dev-db-dev < db/$(table_name).sql
+
+pg-restore-all:
+	@echo "Restoring Postgres database..."
+	@docker exec -i giaco-dev-backend-db-1 psql -U giaco-dev-user-dev -d giaco-dev-db-dev < db/all_tables.sql
+
+pg-backup-each-table:
+	@echo "Backing up each Postgres table..."
+	@for table in $(tables); do \
+		echo "Backing up Postgres table $$table..."; \
+		docker exec -it giaco-dev-backend-db-1 pg_dump -U giaco-dev-user-dev -d giaco-dev-db-dev -t $$table > db/$$table.sql; \
+	done
+
+pg-backup-all:
+	@echo "Backing up Postgres database..."
+	@docker exec -it giaco-dev-backend-db-1 pg_dump -U giaco-dev-user-dev -d giaco-dev-db-dev > db/all_tables.sql
+
 
 # General commands
 
