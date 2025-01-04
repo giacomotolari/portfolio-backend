@@ -22,6 +22,7 @@ class Company(models.Model):
     company_type = models.CharField(max_length=255, choices=TypeChoices.choices, null=True, blank=False)
     size = models.CharField(max_length=255, choices=SizeChoices.choices, default=SizeChoices.MEDIUM)
     url = models.URLField(null=True, blank=True)
+    
 
     class Meta:
         abstract = True
