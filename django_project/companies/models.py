@@ -2,7 +2,6 @@ import uuid
 from django.db import models
 from projects.models import Project
 
-
 class TypeChoices(models.TextChoices):
     PRODUCT_COMPANY = ("product-company", "Product Company")
     AGENCY = ("agency", "Agency")
