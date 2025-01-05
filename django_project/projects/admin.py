@@ -48,6 +48,11 @@ class ProjectAdmin(admin.ModelAdmin):
     list_filter = ("status", "categories", "runs_on", "size")
     search_fields = ("name", "uuid")
 
+    # def save_model(self, request, obj, form, change):
+    #     if not any(platform in obj.runs_on for platform in ["android", "ios"]):
+    #         obj.mobile_stack.clear()
+    #     super().save_model(request, obj, form, change)
+
 
 @admin.register(AsEmployeeProject)
 class AsEmployeeProjectAdmin(ProjectAdmin):

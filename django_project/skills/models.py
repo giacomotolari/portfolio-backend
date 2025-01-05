@@ -1,13 +1,6 @@
 import uuid
 from django.db import models
 from multiselectfield import MultiSelectField
-import datetime
-
-year_start_learning = 2000
-
-YEAR_CHOICES = []
-for year in range(year_start_learning, (datetime.datetime.now().year + 1)):
-    YEAR_CHOICES.append((year, year))
 
 
 class Skill(models.Model):
@@ -15,11 +8,11 @@ class Skill(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(null=True, blank=True)
 
-    started_on = models.IntegerField(
-        ("year"), choices=YEAR_CHOICES, default=datetime.datetime.now().year
+    started_on = models.DateField(
+        null=True, blank=True, help_text="Date when this skill was started to be used or learned."
     )
-    last_used_on = models.IntegerField(
-        ("year"), choices=YEAR_CHOICES, default=datetime.datetime.now().year
+    last_used_on = models.DateField(
+        null=True, blank=True, help_text="Date when this skill was last used."
     )
 
     class LearnedWithChoices(models.TextChoices):
@@ -41,15 +34,13 @@ class Skill(models.Model):
         help_text="Indicate with which tools or methods you learned this skill.",
     )
 
+    companies = models.ManyToManyField("companies.Company", blank=True)
+
     def __str__(self):
         return self.name
 
     class Meta:
         abstract = True
-
-    @property
-    def projects(self):
-        return self.project_set.all()
 
     @property
     def companies(self):
@@ -58,6 +49,7 @@ class Skill(models.Model):
 
 class DevelopmentSkill(Skill):
     class LevelChoices(models.TextChoices):
+        INTERESTED_IN_LEARNING = "interested in learning"
         BEGINNER = "beginner"
         INTERMEDIATE = "intermediate"
         EXPERT = "expert"
@@ -104,6 +96,33 @@ class BackendSkill(DevelopmentSkill):
 
     category = models.CharField(max_length=50, choices=CategoryChoices.choices, null=True, blank=True)
 
+    @property
+    def as_employee_projects(self):
+        return self.as_employee_backend_projects.all()
+
+    @property
+    def personal_backend_projects(self):
+        return self.personal_backend_projects.all()
+
+    @property
+    def team_private_backend_projects(self):
+        return self.team_private_backend_projects.all()
+
+    @property
+    def team_open_source_backend_projects(self):
+        return self.team_open_source_backend_projects.all()
+
+    @property
+    def all_projects(self):
+        return list(
+            {
+                *self.as_employee_projects,
+                *self.personal_backend_projects,
+                *self.team_private_backend_projects,
+                *self.team_open_source_backend_projects,
+            }
+        )
+
 
 class FrontendSkill(DevelopmentSkill):
     class CategoryChoices(models.TextChoices):
@@ -114,6 +133,33 @@ class FrontendSkill(DevelopmentSkill):
 
     category = models.CharField(max_length=50, choices=CategoryChoices.choices, null=True, blank=True)
 
+    @property
+    def as_employee_projects(self):
+        return self.as_employee_frontend_projects.all()
+
+    @property
+    def personal_frontend_projects(self):
+        return self.personal_frontend_projects.all()
+
+    @property
+    def team_private_frontend_projects(self):
+        return self.team_private_frontend_projects.all()
+
+    @property
+    def team_open_source_frontend_projects(self):
+        return self.team_open_source_frontend_projects.all()
+
+    @property
+    def all_projects(self):
+        return list(
+            {
+                *self.as_employee_projects,
+                *self.personal_frontend_projects,
+                *self.team_private_frontend_projects,
+                *self.team_open_source_frontend_projects,
+            }
+        )
+
 
 class MobileSkill(DevelopmentSkill):
     class CategoryChoices(models.TextChoices):
@@ -122,6 +168,33 @@ class MobileSkill(DevelopmentSkill):
         CROSS_PLATFORM = "cross-platform"
 
     category = models.CharField(max_length=50, choices=CategoryChoices.choices, null=True, blank=True)
+
+    @property
+    def as_employee_projects(self):
+        return self.as_employee_mobile_projects.all()
+
+    @property
+    def personal_mobile_projects(self):
+        return self.personal_mobile_projects.all()
+
+    @property
+    def team_private_mobile_projects(self):
+        return self.team_private_mobile_projects.all()
+
+    @property
+    def team_open_source_mobile_projects(self):
+        return self.team_open_source_mobile_projects.all()
+
+    @property
+    def all_projects(self):
+        return list(
+            {
+                *self.as_employee_projects,
+                *self.personal_mobile_projects,
+                *self.team_private_mobile_projects,
+                *self.team_open_source_mobile_projects,
+            }
+        )
 
 
 class LanguageSkill(Skill):

@@ -1,6 +1,6 @@
 import uuid
 from django.db import models
-from skills.models import Skill
+from projects.models import Project
 
 
 class TypeChoices(models.TextChoices):
@@ -22,7 +22,6 @@ class Company(models.Model):
     company_type = models.CharField(max_length=255, choices=TypeChoices.choices, null=True, blank=False)
     size = models.CharField(max_length=255, choices=SizeChoices.choices, default=SizeChoices.MEDIUM)
     url = models.URLField(null=True, blank=True)
-    
 
     class Meta:
         abstract = True
@@ -32,12 +31,30 @@ class Company(models.Model):
 
     @property
     def projects(self):
-        return self.project_set.all()
+        if hasattr(Project, "_meta") and Project._meta.abstract:
+            raise ValueError("Cannot fetch projects for an abstract class.")
+        return Project.objects.filter(models.Q(employed_by=self) | models.Q(customer_companies=self))
 
 
 class EmployerCompany(Company):
-    pass
+    backend_skills = models.ManyToManyField(
+        "skills.BackendSkill", related_name="employer_companies", blank=True
+    )
+    frontend_skills = models.ManyToManyField(
+        "skills.FrontendSkill", related_name="employer_companies", blank=True
+    )
+    mobile_skills = models.ManyToManyField(
+        "skills.MobileSkill", related_name="employer_companies", blank=True
+    )
 
 
 class CustomerCompany(Company):
-    pass
+    backend_skills = models.ManyToManyField(
+        "skills.BackendSkill", related_name="customer_companies", blank=True
+    )
+    frontend_skills = models.ManyToManyField(
+        "skills.FrontendSkill", related_name="customer_companies", blank=True
+    )
+    mobile_skills = models.ManyToManyField(
+        "skills.MobileSkill", related_name="customer_companies", blank=True
+    )

@@ -1,16 +1,6 @@
 import uuid
 from django.db import models
-from companies.models import EmployerCompany, CustomerCompany
 from multiselectfield import MultiSelectField
-
-class ContributionRoleChoices(models.TextChoices):
-    FRONTEND_DEVELOPER = "Frontend Developer"
-    FULL_STACK_DEVELOPER = "Full Stack Developer"
-    BACKEND_DEVELOPER = "Backend Developer"
-    ANDROID_DEVELOPER = "Android Developer"
-    IOS_DEVELOPER = "iOS Developer"
-    CROSS_PLATFORM_DEVELOPER = "Cross-Platform Developer"
-    DEVOPS = "DevOps"
 
 
 class Project(models.Model):
@@ -26,7 +16,7 @@ class Project(models.Model):
         ARCHIVED = "archived"
         PAUSED = "paused"
 
-    status = models.CharField(max_length=50, choices=StatusChoices.choices, null=True, blank=False)
+    status = models.CharField(choices=StatusChoices.choices, null=True, blank=False)
 
     class SizeChoices(models.TextChoices):
         SMALL = "small"
@@ -34,7 +24,7 @@ class Project(models.Model):
         BIG = "big"
         VERY_BIG = "very big"
 
-    size = models.CharField(max_length=50, choices=SizeChoices.choices, null=True, blank=False)
+    size = models.CharField(choices=SizeChoices.choices, null=True, blank=False)
     start_date = models.DateField()
     end_date = models.DateField(null=True, blank=True)
 
@@ -48,7 +38,22 @@ class Project(models.Model):
         choices=RunsOnChoices.choices,
         null=True,
         blank=False,
-        max_length=255,
+    )
+
+    class ContributionRoleChoices(models.TextChoices):
+        FRONTEND_DEVELOPER = "Frontend Developer"
+        FULL_STACK_DEVELOPER = "Full Stack Developer"
+        BACKEND_DEVELOPER = "Backend Developer"
+        ANDROID_DEVELOPER = "Android Developer"
+        IOS_DEVELOPER = "iOS Developer"
+        CROSS_PLATFORM_DEVELOPER = "Cross-Platform Developer"
+        DEVOPS = "DevOps"
+
+    contribution_role = models.CharField(
+        choices=ContributionRoleChoices.choices,
+        default=ContributionRoleChoices.FULL_STACK_DEVELOPER,
+        null=True,
+        blank=False,
     )
 
     class GoalsChoices(models.TextChoices):
@@ -60,7 +65,6 @@ class Project(models.Model):
         choices=GoalsChoices.choices,
         null=True,
         blank=False,
-        max_length=255,
     )
 
     class CategoriesChoices(models.TextChoices):
@@ -76,17 +80,6 @@ class Project(models.Model):
         choices=CategoriesChoices.choices,
         null=True,
         blank=False,
-        max_length=255,
-    )
-
-    backend_stack = models.ManyToManyField(
-        "skills.BackendSkill", related_name="projects", null=True, blank=True
-    )
-    frontend_stack = models.ManyToManyField(
-        "skills.FrontendSkill", related_name="projects", null=True, blank=True
-    )
-    mobile_stack = models.ManyToManyField(
-        "skills.MobileSkill", related_name="projects", null=True, blank=True
     )
 
     urls = models.JSONField(null=True, blank=True)
@@ -100,17 +93,59 @@ class Project(models.Model):
 
 
 class AsEmployeeProject(Project):
-    employed_by = models.ForeignKey(EmployerCompany, null=False, blank=False, on_delete=models.CASCADE)
-    customer_companies = models.ManyToManyField(CustomerCompany, related_name="projects")
+    employed_by = models.ForeignKey(
+        "companies.EmployerCompany",
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name="as_employee_projects",
+    )
+    customer_companies = models.ManyToManyField(
+        "companies.CustomerCompany", related_name="as_employee_projects", blank=True
+    )
+
+    backend_stack = models.ManyToManyField(
+        "skills.BackendSkill", related_name="as_employee_backend_projects", blank=True
+    )
+    frontend_stack = models.ManyToManyField(
+        "skills.FrontendSkill", related_name="as_employee_frontend_projects", blank=True
+    )
+    mobile_stack = models.ManyToManyField(
+        "skills.MobileSkill", related_name="as_employee_mobile_projects", blank=True
+    )
 
 
 class PersonalProject(Project):
-    pass
+    backend_stack = models.ManyToManyField(
+        "skills.BackendSkill", related_name="personal_backend_projects", blank=True
+    )
+    frontend_stack = models.ManyToManyField(
+        "skills.FrontendSkill", related_name="personal_frontend_projects", blank=True
+    )
+    mobile_stack = models.ManyToManyField(
+        "skills.MobileSkill", related_name="personal_mobile_projects", blank=True
+    )
 
 
 class TeamPrivateProject(Project):
-    pass
+    backend_stack = models.ManyToManyField(
+        "skills.BackendSkill", related_name="team_private_backend_projects", blank=True
+    )
+    frontend_stack = models.ManyToManyField(
+        "skills.FrontendSkill", related_name="team_private_frontend_projects", blank=True
+    )
+    mobile_stack = models.ManyToManyField(
+        "skills.MobileSkill", related_name="team_private_mobile_projects", blank=True
+    )
 
 
 class TeamOpenSourceProject(Project):
-    pass
+    backend_stack = models.ManyToManyField(
+        "skills.BackendSkill", related_name="team_open_source_backend_projects", blank=True
+    )
+    frontend_stack = models.ManyToManyField(
+        "skills.FrontendSkill", related_name="team_open_source_frontend_projects", blank=True
+    )
+    mobile_stack = models.ManyToManyField(
+        "skills.MobileSkill", related_name="team_open_source_mobile_projects", blank=True
+    )

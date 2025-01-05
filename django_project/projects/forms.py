@@ -47,4 +47,7 @@ class ProjectUrlsForm(forms.ModelForm):
             "video": cleaned_data.pop("video", None),
             "other": cleaned_data.pop("other", None),
         }
+        runs_on = cleaned_data.get("runs_on", [])
+        if not any(platform in runs_on for platform in ["android", "ios"]):
+            cleaned_data["mobile_stack"] = []
         return cleaned_data
