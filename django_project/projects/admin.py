@@ -23,6 +23,16 @@ class ProjectAdmin(admin.ModelAdmin):
             },
         ),
         (
+            "Tech Stack",
+            {
+                "fields": (
+                    "backend_stack",
+                    "frontend_stack",
+                    "mobile_stack",
+                ),
+            },
+        ),
+        (
             "Project URLs",
             {
                 "fields": (
@@ -45,13 +55,16 @@ class ProjectAdmin(admin.ModelAdmin):
         ),
     )
     list_display = ("name", "start_date", "end_date", "status", "size")
-    list_filter = ("status", "categories", "runs_on", "size")
+    list_filter = (
+        "status",
+        "categories",
+        "runs_on",
+        "size",
+        "backend_stack",
+        "frontend_stack",
+        "mobile_stack",
+    )
     search_fields = ("name", "uuid")
-
-    # def save_model(self, request, obj, form, change):
-    #     if not any(platform in obj.runs_on for platform in ["android", "ios"]):
-    #         obj.mobile_stack.clear()
-    #     super().save_model(request, obj, form, change)
 
 
 @admin.register(AsEmployeeProject)

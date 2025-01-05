@@ -2,6 +2,7 @@ import uuid
 from django.db import models
 from projects.models import Project
 
+
 class TypeChoices(models.TextChoices):
     PRODUCT_COMPANY = ("product-company", "Product Company")
     AGENCY = ("agency", "Agency")
@@ -36,24 +37,28 @@ class Company(models.Model):
 
 
 class EmployerCompany(Company):
-    backend_skills = models.ManyToManyField(
-        "skills.BackendSkill", related_name="employer_companies", blank=True
-    )
-    frontend_skills = models.ManyToManyField(
-        "skills.FrontendSkill", related_name="employer_companies", blank=True
-    )
-    mobile_skills = models.ManyToManyField(
-        "skills.MobileSkill", related_name="employer_companies", blank=True
-    )
+    def backend_skills(self):
+        """Fetch backend skills based on projects related to the company."""
+        return {skill for project in self.projects for skill in project.backend_stack.all()}
+
+    def frontend_skills(self):
+        """Fetch frontend skills based on projects related to the company."""
+        return {skill for project in self.projects for skill in project.frontend_stack.all()}
+
+    def mobile_skills(self):
+        """Fetch mobile skills based on projects related to the company."""
+        return {skill for project in self.projects for skill in project.mobile_stack.all()}
 
 
 class CustomerCompany(Company):
-    backend_skills = models.ManyToManyField(
-        "skills.BackendSkill", related_name="customer_companies", blank=True
-    )
-    frontend_skills = models.ManyToManyField(
-        "skills.FrontendSkill", related_name="customer_companies", blank=True
-    )
-    mobile_skills = models.ManyToManyField(
-        "skills.MobileSkill", related_name="customer_companies", blank=True
-    )
+    def backend_skills(self):
+        """Fetch backend skills based on projects related to the company."""
+        return {skill for project in self.projects for skill in project.backend_stack.all()}
+
+    def frontend_skills(self):
+        """Fetch frontend skills based on projects related to the company."""
+        return {skill for project in self.projects for skill in project.frontend_stack.all()}
+
+    def mobile_skills(self):
+        """Fetch mobile skills based on projects related to the company."""
+        return {skill for project in self.projects for skill in project.mobile_stack.all()}

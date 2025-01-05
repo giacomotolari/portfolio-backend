@@ -25,7 +25,6 @@ class Skill(models.Model):
         DOCUMENTATIONS = "documentations"
         MENTORS = "mentors"
         AI_BOTS = "ai bots"
-        OTHER = "other"
 
     learned_with = MultiSelectField(
         choices=LearnedWithChoices.choices,
@@ -62,8 +61,10 @@ class DevelopmentSkill(Skill):
         FRAMEWORK = "framework"
         LIBRARY = "library"
         TOOL = "tool"
+        RUN_TIME = "run-time"
+        BUNDLER = "bundler"
 
-    skill_type = models.CharField(max_length=50, choices=TypeChoices, null=True, blank=True)
+    skill_types = MultiSelectField(choices=TypeChoices.choices, null=True, blank=True)
 
     class ToolTypeChoices(models.TextChoices):
         IDE = "ide"
@@ -75,12 +76,7 @@ class DevelopmentSkill(Skill):
         TESTING = "testing"
         DEBUGGING = "debugging"
 
-    tool_type = models.CharField(max_length=50, choices=ToolTypeChoices.choices, null=True, blank=True)
-
-    def save(self, *args, **kwargs):
-        if self.skill_type == self.TypeChoices.TOOL and not self.tool_type:
-            raise ValueError("tool_type must be set if skill_type is 'tool'")
-        super().save(*args, **kwargs)
+    tool_types = MultiSelectField(choices=ToolTypeChoices.choices, null=True, blank=True)
 
     class Meta:
         abstract = True
@@ -94,7 +90,7 @@ class BackendSkill(DevelopmentSkill):
         CLOUD = "cloud"
         SECURITY = "security"
 
-    category = models.CharField(max_length=50, choices=CategoryChoices.choices, null=True, blank=True)
+    categories = MultiSelectField(choices=CategoryChoices.choices, null=True, blank=True)
 
     @property
     def as_employee_projects(self):
@@ -131,7 +127,7 @@ class FrontendSkill(DevelopmentSkill):
         UX = "ux"
         LOGIC = "logic"
 
-    category = models.CharField(max_length=50, choices=CategoryChoices.choices, null=True, blank=True)
+    categories = MultiSelectField(choices=CategoryChoices.choices, null=True, blank=True)
 
     @property
     def as_employee_projects(self):
@@ -167,7 +163,7 @@ class MobileSkill(DevelopmentSkill):
         IOS = "ios"
         CROSS_PLATFORM = "cross-platform"
 
-    category = models.CharField(max_length=50, choices=CategoryChoices.choices, null=True, blank=True)
+    categories = MultiSelectField(choices=CategoryChoices.choices, null=True, blank=True)
 
     @property
     def as_employee_projects(self):
@@ -200,8 +196,8 @@ class MobileSkill(DevelopmentSkill):
 class LanguageSkill(Skill):
     class LanguageLevelChoices(models.TextChoices):
         BASIC = "basic"
-        FLUENT = "fluent"
         INTERMEDIATE = "intermediate"
+        FLUENT = "fluent"
         NATIVE = "native"
 
-    level = models.CharField(max_length=50, choices=LanguageLevelChoices.choices, null=True, blank=False)
+    level = models.CharField(choices=LanguageLevelChoices.choices, null=True, blank=False)
