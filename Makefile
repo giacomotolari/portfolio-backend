@@ -42,6 +42,10 @@ django-migrate:
 	@echo "Running Django migrations..."
 	@poetry run python3 django_project/manage.py migrate
 
+django-migrate-app-to-migration:
+	@echo "Migrating Django app to specific migration..."
+	@poetry run python3 django_project/manage.py migrate $(app_name) $(migration_name)
+
 django-run:
 	@echo "Starting Django server..."
 	@poetry run python3 django_project/manage.py runserver
@@ -78,6 +82,13 @@ pg-restore-table:
 pg-restore-all:
 	@echo "Restoring Postgres database..."
 	@docker exec -i giaco-dev-backend-db-1 psql -U giaco-dev-user-dev -d giaco-dev-db-dev < db/all_tables.sql
+
+pg-restore-each-table:
+	@echo "Restoring each Postgres table..."
+	@for table in $(tables); do \
+		echo "Restoring Postgres table $$table..."; \
+		docker exec -i giaco-dev-backend-db-1 psql -U giaco-dev-user-dev -d giaco-dev-db-dev < db/$$table.sql; \
+	done
 
 pg-backup-each-table:
 	@echo "Backing up each Postgres table..."
