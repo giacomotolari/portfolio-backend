@@ -1,6 +1,12 @@
 import uuid
 from django.db import models
-from projects.models import Project
+from projects.models import (
+    Project,
+    AsEmployeeProject,
+    PersonalProject,
+    TeamOpenSourceProject,
+    TeamPrivateProject,
+)
 
 
 class TypeChoices(models.TextChoices):
@@ -29,14 +35,13 @@ class Company(models.Model):
     def __str__(self):
         return self.name
 
-    @property
-    def projects(self):
-        if hasattr(Project, "_meta") and Project._meta.abstract:
-            raise ValueError("Cannot fetch projects for an abstract class.")
-        return Project.objects.filter(models.Q(employed_by=self) | models.Q(customer_companies=self))
-
 
 class EmployerCompany(Company):
+
+    @property
+    def projects(self):
+        return self.as_employee_projects.all()
+
     @property
     def backend_skills(self):
         """Fetch backend skills based on projects related to the company."""
@@ -54,6 +59,11 @@ class EmployerCompany(Company):
 
 
 class CustomerCompany(Company):
+
+    @property
+    def projects(self):
+        return self.as_employee_projects.all()
+
     @property
     def backend_skills(self):
         """Fetch backend skills based on projects related to the company."""
