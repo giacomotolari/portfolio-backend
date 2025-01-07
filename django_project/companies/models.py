@@ -37,28 +37,34 @@ class Company(models.Model):
 
 
 class EmployerCompany(Company):
+    @property
     def backend_skills(self):
         """Fetch backend skills based on projects related to the company."""
         return {skill for project in self.projects for skill in project.backend_stack.all()}
 
+    @property
     def frontend_skills(self):
         """Fetch frontend skills based on projects related to the company."""
         return {skill for project in self.projects for skill in project.frontend_stack.all()}
 
+    @property
     def mobile_skills(self):
         """Fetch mobile skills based on projects related to the company."""
         return {skill for project in self.projects for skill in project.mobile_stack.all()}
 
 
 class CustomerCompany(Company):
+    @property
     def backend_skills(self):
         """Fetch backend skills based on projects related to the company."""
         return {skill for project in self.projects for skill in project.backend_stack.all()}
 
+    @property
     def frontend_skills(self):
         """Fetch frontend skills based on projects related to the company."""
         return {skill for project in self.projects for skill in project.frontend_stack.all()}
 
+    @property
     def mobile_skills(self):
         """Fetch mobile skills based on projects related to the company."""
         return {skill for project in self.projects for skill in project.mobile_stack.all()}
