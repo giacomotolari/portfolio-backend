@@ -4,12 +4,11 @@ from skills.serializers import BackendSkillSerializer, FrontendSkillSerializer, 
 from projects.serializers import AsEmployeeProjectSerializer
 from rest_framework import serializers
 
-
 class EmployerCompanySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EmployerCompany
-        fields = "__all__"
+        exclude = ("id",)
 
     backend_skills = serializers.SerializerMethodField()
     frontend_skills = serializers.SerializerMethodField()
@@ -37,7 +36,7 @@ class CustomerCompanySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomerCompany
-        fields = "__all__"
+        exclude = ("id",)
 
     def get_backend_skills(self, obj):
         return BackendSkillSerializer(obj.backend_skills, many=True).data
